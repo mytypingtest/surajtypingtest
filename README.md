@@ -1,2 +1,2 @@
-# surajtyping.com
+# surajtypingtest
 best typing website 
