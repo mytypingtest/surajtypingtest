@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Typing Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Typing Speed Test</h1>
+
+    <label for="name">Enter Your Name:</label>
+    <input type="text" id="username" placeholder="Your name..." />
+
+    <label for="mode">Select Mode:</label>
+    <select id="mode">
+      <option value="practice">Practice Mode</option>
+      <option value="exam">Exam Mode</option>
+    </select>
+
+    <label for="time">Select Time:</label>
+    <select id="time">
+      <option value="60">1 Minute</option>
+      <option value="120">2 Minutes</option>
+      <option value="300">5 Minutes</option>
+      <option value="600">10 Minutes</option>
+      <option value="900">15 Minutes</option>
+      <option value="1200">20 Minutes</option>
+    </select>
+
+    <button onclick="startTest()">Start Typing Test</button>
+
+    <div id="test-area" style="display:none;">
+      <p id="test-text">Loading text...</p>
+      <textarea id="typing-area" placeholder="Start typing here..." oninput="checkTyping()"></textarea>
+      <div id="stats">
+        <p><strong>Time Left:</strong> <span id="time-left"></span></p>
+        <p><strong>WPM:</strong> <span id="wpm">0</span></p>
+        <p><strong>Accuracy:</strong> <span id="accuracy">100%</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
