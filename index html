@@ -53,4 +53,16 @@
 
   <script src="script.js"></script>
 </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ✅ Google Site Verification -->
+  <meta name="google-site-verification" content="AbcdEfghIjklMnop1234" />
+
+  <!-- ✅ SEO Tags -->
+  <title>Suraj Typing Test | Hindi English Typing Speed Test</title>
+  <meta name="description" content="Take free typing tests in Hindi and English. Improve your typing speed and accuracy with Suraj Typing Test.">
+  <meta name="keywords" content="typing test, hindi typing, english typing, suraj typing, typing speed test, online typing test">
+  <meta name="author" content="Suraj Tiwari">
+</head>
