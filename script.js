@@ -1,74 +1,151 @@
-// script.js
 
-let testText = "Typing practice helps improve speed and accuracy. Keep practicing regularly to get better.";
-let timeLeft = 0;
-let timerInterval;
-let totalTyped = 0;
-let correctChars = 0;
+/* === Base Reset === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-function startTest() {
-  const username = document.getElementById("username").value.trim();
-  const mode = document.getElementById("mode").value;
-  const time = parseInt(document.getElementById("time").value);
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f2f4f8;
+  color: #222;
+  padding: 20px;
+}
 
-  if (username === "") {
-    alert("Please enter your name!");
-    return;
+/* === Container === */
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+}
+
+/* === Heading === */
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2.2rem;
+  color: #0055aa;
+}
+
+/* === Setup Panel === */
+.setup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.setup input,
+.setup select,
+.setup button {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.setup button {
+  background-color: #0055aa;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.setup button:hover {
+  background-color: #003f7f;
+}
+
+/* === Typing Area === */
+.test-area {
+  margin-top: 20px;
+}
+
+.text-display {
+  background: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  min-height: 150px;
+  font-size: 18px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* === Highlight Colors === */
+.correct {
+  color: green;
+  font-weight: bold;
+}
+
+.incorrect {
+  color: red;
+  font-weight: bold;
+}
+
+/* === Input Area === */
+#inputArea {
+  width: 100%;
+  height: 120px;
+  font-size: 18px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  resize: none;
+  margin-top: 20px;
+}
+
+#inputArea:disabled {
+  background-color: #eee;
+}
+
+/* === Stats Display === */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.stats p {
+  margin: 5px 0;
+}
+
+/* === Result Box === */
+.result-box {
+  background: #e6ffe6;
+  border: 2px solid #28a745;
+  padding: 25px;
+  border-radius: 12px;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.result-box h2 {
+  color: #28a745;
+  margin-bottom: 15px;
+}
+
+/* === Responsive Design === */
+@media (max-width: 600px) {
+  .setup {
+    flex-direction: column;
+    align-items: center;
   }
 
-  document.getElementById("test-text").innerText = testText;
-  document.getElementById("test-area").style.display = "block";
-  document.getElementById("typing-area").value = "";
-  document.getElementById("typing-area").disabled = false;
-  document.getElementById("typing-area").focus();
-  document.getElementById("wpm").innerText = "0";
-  document.getElementById("accuracy").innerText = "100%";
-
-  timeLeft = time;
-  totalTyped = 0;
-  correctChars = 0;
-  document.getElementById("time-left").innerText = formatTime(timeLeft);
-
-  clearInterval(timerInterval);
-  timerInterval = setInterval(updateTimer, 1000);
-}
-
-function updateTimer() {
-  timeLeft--;
-  document.getElementById("time-left").innerText = formatTime(timeLeft);
-  if (timeLeft <= 0) {
-    clearInterval(timerInterval);
-    endTest();
-  }
-}
-
-function checkTyping() {
-  const typed = document.getElementById("typing-area").value;
-  totalTyped = typed.length;
-  correctChars = 0;
-
-  for (let i = 0; i < typed.length; i++) {
-    if (typed[i] === testText[i]) {
-      correctChars++;
-    }
+  .stats {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  const wordsTyped = typed.trim().split(/\s+/).length;
-  const timeSpent = parseInt(document.getElementById("time").value) - timeLeft;
-  const wpm = timeSpent > 0 ? Math.round((wordsTyped / timeSpent) * 60) : 0;
-  const accuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 100;
-
-  document.getElementById("wpm").innerText = wpm;
-  document.getElementById("accuracy").innerText = accuracy + "%";
-}
-
-function endTest() {
-  document.getElementById("typing-area").disabled = true;
-  alert("Time's up! Test completed.");
-}
-
-function formatTime(seconds) {
-  const min = Math.floor(seconds / 60);
-  const sec = seconds % 60;
-  return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+  #inputArea {
+    height: 100px;
+  }
 }
