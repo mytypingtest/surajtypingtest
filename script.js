@@ -1,151 +1,134 @@
 
-/* === Base Reset === */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// === Variables ===
+let timer;
+let timeLeft = 0;
+let totalTime = 0;
+let originalText = "Welcome to Suraj Typing Test. This is a sample typing paragraph to test your speed, accuracy and confidence. Type carefully and see your results live.";
+let userText = '';
+let isTestRunning = false;
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f2f4f8;
-  color: #222;
-  padding: 20px;
-}
+// === DOM Elements ===
+const textDisplay = document.getElementById("textDisplay");
+const inputArea = document.getElementById("inputArea");
+const timeLeftDisplay = document.getElementById("timeLeft");
+const wpmDisplay = document.getElementById("wpm");
+const accuracyDisplay = document.getElementById("accuracy");
+const resultBox = document.getElementById("result");
 
-/* === Container === */
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
-}
+// === Start Test ===
+function startTest() {
+  const username = document.getElementById("username").value.trim();
+  const mode = document.getElementById("mode").value;
+  totalTime = parseInt(document.getElementById("duration").value);
 
-/* === Heading === */
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 2.2rem;
-  color: #0055aa;
-}
-
-/* === Setup Panel === */
-.setup {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.setup input,
-.setup select,
-.setup button {
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  outline: none;
-}
-
-.setup button {
-  background-color: #0055aa;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.setup button:hover {
-  background-color: #003f7f;
-}
-
-/* === Typing Area === */
-.test-area {
-  margin-top: 20px;
-}
-
-.text-display {
-  background: #f0f0f0;
-  padding: 20px;
-  border-radius: 10px;
-  min-height: 150px;
-  font-size: 18px;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-/* === Highlight Colors === */
-.correct {
-  color: green;
-  font-weight: bold;
-}
-
-.incorrect {
-  color: red;
-  font-weight: bold;
-}
-
-/* === Input Area === */
-#inputArea {
-  width: 100%;
-  height: 120px;
-  font-size: 18px;
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  resize: none;
-  margin-top: 20px;
-}
-
-#inputArea:disabled {
-  background-color: #eee;
-}
-
-/* === Stats Display === */
-.stats {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-.stats p {
-  margin: 5px 0;
-}
-
-/* === Result Box === */
-.result-box {
-  background: #e6ffe6;
-  border: 2px solid #28a745;
-  padding: 25px;
-  border-radius: 12px;
-  margin-top: 30px;
-  text-align: left;
-}
-
-.result-box h2 {
-  color: #28a745;
-  margin-bottom: 15px;
-}
-
-/* === Responsive Design === */
-@media (max-width: 600px) {
-  .setup {
-    flex-direction: column;
-    align-items: center;
+  if (username === "") {
+    alert("Please enter your name.");
+    return;
   }
 
-  .stats {
-    flex-direction: column;
-    gap: 10px;
+  document.getElementById("testArea").style.display = "block";
+  inputArea.disabled = false;
+  inputArea.value = "";
+  inputArea.focus();
+  resultBox.style.display = "none";
+
+  timeLeft = totalTime;
+  isTestRunning = true;
+  userText = "";
+
+  // Display text
+  displayText(originalText);
+
+  // Reset Stats
+  timeLeftDisplay.textContent = timeLeft;
+  wpmDisplay.textContent = 0;
+  accuracyDisplay.textContent = "100%";
+
+  // Start Timer
+  clearInterval(timer);
+  timer = setInterval(() => {
+    timeLeft--;
+    timeLeftDisplay.textContent = timeLeft;
+    updateStats();
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endTest(username, mode);
+    }
+  }, 1000);
+}
+
+// === Typing Input Event ===
+inputArea.addEventListener("input", () => {
+  if (!isTestRunning) return;
+  userText = inputArea.value;
+  displayText(originalText, userText);
+  updateStats();
+});
+
+// === Display Highlighted Text ===
+function displayText(text, input = "") {
+  let result = "";
+
+  for (let i = 0; i < text.length; i++) {
+    if (i < input.length) {
+      if (text[i] === input[i]) {
+        result += `<span class="correct">${text[i]}</span>`;
+      } else {
+        result += `<span class="incorrect">${text[i]}</span>`;
+      }
+    } else {
+      result += text[i];
+    }
   }
 
-  #inputArea {
-    height: 100px;
-  }
+  textDisplay.innerHTML = result;
+}
+
+// === Stats Calculation ===
+function updateStats() {
+  const words = userText.trim().split(/\s+/).filter(w => w !== "");
+  const wordsCount = words.length;
+
+  const correctChars = originalText
+    .split("")
+    .filter((char, i) => userText[i] === char).length;
+
+  const accuracy = userText.length > 0
+    ? ((correctChars / userText.length) * 100).toFixed(1)
+    : 100;
+
+  const timeSpent = totalTime - timeLeft;
+  const minutes = timeSpent / 60;
+  const wpm = minutes > 0 ? Math.round(wordsCount / minutes) : 0;
+
+  accuracyDisplay.textContent = `${accuracy}%`;
+  wpmDisplay.textContent = wpm;
+}
+
+// === End Test & Show Result ===
+function endTest(username, mode) {
+  isTestRunning = false;
+  inputArea.disabled = true;
+
+  const wordsTyped = userText.trim().split(/\s+/).filter(w => w !== "").length;
+  const correctChars = originalText
+    .split("")
+    .filter((char, i) => userText[i] === char).length;
+
+  const accuracy = userText.length > 0
+    ? ((correctChars / userText.length) * 100).toFixed(1)
+    : 100;
+
+  const minutes = totalTime / 60;
+  const wpm = minutes > 0 ? Math.round(wordsTyped / minutes) : 0;
+
+  // Fill result box
+  document.getElementById("resName").textContent = username;
+  document.getElementById("resMode").textContent = mode;
+  document.getElementById("resDuration").textContent = totalTime;
+  document.getElementById("resWPM").textContent = wpm;
+  document.getElementById("resAccuracy").textContent = accuracy;
+
+  resultBox.style.display = "block";
 }
