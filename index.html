@@ -1,1 +1,58 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Typing Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 My Typing Test</h1>
 
+    <!-- Step 1: Enter Name -->
+    <div class="input-section">
+      <input type="text" id="username" placeholder="Enter your name..." required />
+      
+      <!-- Mode selection -->
+      <select id="mode">
+        <option value="practice">Practice Mode</option>
+        <option value="exam">Exam Mode</option>
+      </select>
+
+      <!-- Duration selection -->
+      <select id="duration">
+        <option value="60">1 Minute</option>
+        <option value="120">2 Minutes</option>
+        <option value="300">5 Minutes</option>
+        <option value="600">10 Minutes</option>
+        <option value="900">15 Minutes</option>
+        <option value="1200">20 Minutes</option>
+      </select>
+
+      <button id="startBtn">Start Test</button>
+    </div>
+
+    <!-- Typing Test Area -->
+    <div class="typing-area hidden">
+      <div id="timer">Time: 0:00</div>
+      <div id="textDisplay"></div>
+      <textarea id="textInput" placeholder="Start typing here..." disabled></textarea>
+    </div>
+
+    <!-- Results -->
+    <div class="result hidden">
+      <h2>Result Summary</h2>
+      <p><strong>Name:</strong> <span id="resultName"></span></p>
+      <p><strong>WPM:</strong> <span id="wpm"></span></p>
+      <p><strong>Accuracy:</strong> <span id="accuracy"></span>%</p>
+      <p><strong>Characters Typed:</strong> <span id="chars"></span></p>
+      <p><strong>Time Taken:</strong> <span id="timeUsed"></span></p>
+      <button onclick="location.reload()">Restart</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
