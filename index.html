@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Suraj Typing Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Typing Test</h1>
 
+    <div class="settings">
+      <label>Name: <input type="text" id="username" placeholder="Enter your name" /></label>
+      <label>Time:
+        <select id="timeSelect">
+          <option value="60">1 Minute</option>
+          <option value="120">2 Minutes</option>
+          <option value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+        </select>
+      </label>
+      <label>Language:
+        <select id="languageSelect">
+          <option value="english">English</option>
+          <option value="hindi">Hindi</option>
+        </select>
+      </label>
+      <label>Mode:
+        <select id="modeSelect">
+          <option value="practice">Practice Mode</option>
+          <option value="exam">Exam Mode</option>
+        </select>
+      </label>
+      <label>Backspace:
+        <select id="backspaceSelect">
+          <option value="enable">Enable</option>
+          <option value="disable">Disable</option>
+        </select>
+      </label>
+      <button onclick="startTest()">Start Test</button>
+    </div>
+
+    <div class="typing-box">
+      <div id="userDisplay"></div>
+      <div id="timer">00:00</div>
+      <div id="paragraphDisplay" class="paragraph"></div>
+      <textarea id="inputArea" placeholder="Start typing here..." disabled></textarea>
+    </div>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
