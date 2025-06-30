@@ -3,32 +3,209 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SurajTypingTest</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>SurajTypingTest - Practice Mode</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fdfdfd;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #111;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    #textDisplay {
+      background: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      line-height: 2rem;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      min-height: 120px;
+      user-select: none;
+    }
+    .word {
+      padding: 2px 4px;
+      margin: 0 2px;
+      border-radius: 4px;
+    }
+    .current {
+      background: yellow;
+    }
+    .correct {
+      color: black;
+    }
+    .incorrect {
+      background-color: #ffcccc;
+      color: red;
+    }
+    #inputArea {
+      width: 100%;
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+    }
+    .stats {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .start-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .start-btn:hover {
+      background: #0056b3;
+    }
+    @media (max-width: 600px) {
+      #textDisplay {
+        font-size: 1rem;
+        line-height: 1.5rem;
+      }
+      #inputArea {
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>SurajTypingTest - Practice Mode</header>
   <div class="container">
-    <h1>SurajTypingTest</h1>
+    <label for="userName">Enter your name:</label>
+    <input type="text" id="userName" placeholder="Your name here" style="width: 100%; padding: 0.5rem; font-size: 1rem; margin-bottom: 1rem;" />
     
-    <div class="input-name">
-      <label for="username">Enter your name:</label>
-      <input type="text" id="username" placeholder="Your name here" />
-      <button id="startTest">Start Practice</button>
+    <div id="textDisplay"></div>
+    
+    <input type="text" id="inputArea" placeholder="Start typing here..." disabled />
+    
+    <div class="stats">
+      <p>⏱️ Time: <span id="timer">60</span> sec</p>
+      <p>📈 Speed: <span id="wpm">0</span> WPM | 🎯 Accuracy: <span id="accuracy">100</span>%</p>
     </div>
-
-    <div id="testArea" class="hidden">
-      <div id="textDisplay" class="text-display"></div>
-      <textarea id="inputArea" placeholder="Start typing here..." disabled></textarea>
-      
-      <div class="result">
-        <p><strong>Name:</strong> <span id="displayName"></span></p>
-        <p><strong>Time:</strong> <span id="time">0</span>s</p>
-        <p><strong>WPM:</strong> <span id="wpm">0</span></p>
-        <p><strong>Accuracy:</strong> <span id="accuracy">0%</span></p>
-        <p><strong>Mistakes:</strong> <span id="mistakes">0</span></p>
-      </div>
-    </div>
+    
+    <button class="start-btn" onclick="startTest()">Start Typing Test</button>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    const paragraphs = [
+      "Typing is a skill that improves with practice.",
+      "SurajTypingTest helps you become faster and more accurate.",
+      "Keep practicing every day to become a typing master."
+    ];
+
+    let currentParagraph = "";
+    let words = [];
+    let currentWordIndex = 0;
+    let timeLeft = 60;
+    let timerInterval;
+    let typedChars = 0, errors = 0;
+    let testStarted = false;
+
+    const textDisplay = document.getElementById("textDisplay");
+    const inputArea = document.getElementById("inputArea");
+    const timer = document.getElementById("timer");
+    const wpmDisplay = document.getElementById("wpm");
+    const accuracyDisplay = document.getElementById("accuracy");
+
+    function startTest() {
+      const name = document.getElementById("userName").value.trim();
+      if (!name) {
+        alert("Please enter your name first.");
+        return;
+      }
+
+      currentParagraph = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+      words = currentParagraph.split(" ");
+      currentWordIndex = 0;
+      typedChars = 0;
+      errors = 0;
+      timeLeft = 60;
+      inputArea.disabled = false;
+      inputArea.value = "";
+      inputArea.focus();
+      testStarted = true;
+
+      showParagraph();
+      updateStats();
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timer.textContent = timeLeft;
+        updateStats();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          inputArea.disabled = true;
+          alert(`Test complete! Speed: ${wpmDisplay.textContent} WPM, Accuracy: ${accuracyDisplay.textContent}%`);
+        }
+      }, 1000);
+    }
+
+    function showParagraph() {
+      textDisplay.innerHTML = "";
+      words.forEach((word, index) => {
+        const span = document.createElement("span");
+        span.textContent = word + " ";
+        span.classList.add("word");
+        if (index === currentWordIndex) span.classList.add("current");
+        textDisplay.appendChild(span);
+      });
+    }
+
+    inputArea.addEventListener("input", () => {
+      if (!testStarted) return;
+      const input = inputArea.value.trimEnd();
+      const currentWord = words[currentWordIndex];
+      const wordSpans = textDisplay.querySelectorAll(".word");
+
+      if (input.endsWith(" ")) {
+        if (input.trim().toLowerCase() === currentWord.toLowerCase()) {
+          wordSpans[currentWordIndex].classList.remove("current");
+          wordSpans[currentWordIndex].classList.add("correct");
+        } else {
+          wordSpans[currentWordIndex].classList.remove("current");
+          wordSpans[currentWordIndex].classList.add("incorrect");
+          errors++;
+        }
+        typedChars += input.trim().length;
+        currentWordIndex++;
+        inputArea.value = "";
+        if (currentWordIndex < words.length) {
+          wordSpans[currentWordIndex].classList.add("current");
+        } else {
+          // Load next paragraph automatically
+          currentParagraph = paragraphs[Math.floor(Math.random() * paragraphs.length)];
+          words = currentParagraph.split(" ");
+          currentWordIndex = 0;
+          showParagraph();
+        }
+      }
+      updateStats();
+    });
+
+    function updateStats() {
+      const minutes = (60 - timeLeft) / 60;
+      const wpm = minutes > 0 ? Math.round((typedChars / 5) / minutes) : 0;
+      const accuracy = typedChars + errors > 0 ? Math.round((typedChars / (typedChars + errors)) * 100) : 100;
+      wpmDisplay.textContent = wpm;
+      accuracyDisplay.textContent = accuracy;
+    }
+  </script>
 </body>
 </html>
