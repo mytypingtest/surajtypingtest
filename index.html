@@ -3,316 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SurajTypingTest - Practice & Exam Mode</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-    }
-    header {
-      background: #111;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.6rem;
-    }
-    .mode-switcher {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem;
-      background: #eee;
-    }
-    .mode-switcher button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .mode-switcher button.active {
-      background: #0056b3;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 1.5rem;
-    }
-    .hidden {
-      display: none;
-    }
-    textarea, input, select {
-      width: 100%;
-      font-size: 1rem;
-      padding: 0.7rem;
-      margin: 0.5rem 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .typing-area {
-      background: #fff;
-      border: 2px solid #007bff;
-      padding: 1rem;
-      min-height: 120px;
-      font-size: 1.2rem;
-      line-height: 2rem;
-      border-radius: 6px;
-      margin-top: 1rem;
-      user-select: none;
-    }
-    .word {
-      padding: 2px 4px;
-      margin-right: 2px;
-      border-radius: 4px;
-    }
-    .current {
-      background: yellow;
-    }
-    .incorrect {
-      background: #ffcccc;
-      color: red;
-    }
-    .stats {
-      margin-top: 1rem;
-      font-size: 1rem;
-    }
-    .btn {
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    @media (max-width: 600px) {
-      .typing-area { font-size: 1rem; line-height: 1.5rem; }
-      input, textarea, select { font-size: 0.95rem; }
-    }
-  </style>
+  <title>Suraj Typing Test</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <header>SurajTypingTest - Practice & Exam Mode</header>
-
-  <div class="mode-switcher">
-    <button id="practiceBtn" class="active" onclick="switchMode('practice')">Practice Mode</button>
-    <button id="examBtn" onclick="switchMode('exam')">Exam Mode</button>
-  </div>
-
   <div class="container">
-    
-    <!-- Practice Mode -->
-    <div id="practiceMode">
-      <label>Your Name:</label>
-      <input type="text" id="practiceName" placeholder="Enter your name" />
-      <div class="typing-area" id="practiceText"></div>
-      <input type="text" id="practiceInput" placeholder="Start typing here..." disabled />
-      <div class="stats">
-        ⏱️ Time: <span id="practiceTime">60</span> sec |
-        📈 Speed: <span id="practiceWPM">0</span> WPM |
-        🎯 Accuracy: <span id="practiceAccuracy">100</span>%
-      </div>
-      <button class="btn" onclick="startPractice()">Start Practice Test</button>
-    </div>
+    <h1>Suraj Typing Test</h1>
 
-    <!-- Exam Mode -->
-    <div id="examMode" class="hidden">
-      <label>Your Name:</label>
-      <input type="text" id="examName" placeholder="Enter your name" />
-      <label>Paste Paragraph:</label>
-      <textarea id="examPara" rows="5" placeholder="Paste the paragraph for exam here..."></textarea>
-      <label>Select Duration:</label>
-      <select id="examTime">
-        <option value="60">1 Minute</option>
-        <option value="120">2 Minutes</option>
-        <option value="300">5 Minutes</option>
-        <option value="600">10 Minutes</option>
+    <div class="config">
+      <input type="text" id="username" placeholder="Enter your name" />
+      
+      <select id="modeSelect">
+        <option value="practice">Practice Mode</option>
+        <option value="exam">Exam Mode</option>
       </select>
-      <button class="btn" onclick="startExam()">Start Exam</button>
-      <div class="typing-area" id="examText"></div>
-      <input type="text" id="examInput" placeholder="Start typing here..." disabled />
-      <div class="stats">
-        ⏱️ Time Left: <span id="examTimer">0</span> sec |
-        📈 Speed: <span id="examWPM">0</span> WPM |
-        🎯 Accuracy: <span id="examAccuracy">100</span>% |
-        ❌ Errors: <span id="examErrors">0</span>
-      </div>
+
+      <select id="timeSelect">
+        <option value="1">1 Minute</option>
+        <option value="2">2 Minutes</option>
+        <option value="5">5 Minutes</option>
+        <option value="10">10 Minutes</option>
+        <option value="15">15 Minutes</option>
+        <option value="20">20 Minutes</option>
+      </select>
+
+      <label>
+        <input type="checkbox" id="allowBackspace" checked />
+        Allow Backspace
+      </label>
+
+      <button id="startBtn">Start Test</button>
     </div>
 
+    <div class="test-area" id="testArea">
+      <div id="displayText"></div>
+      <textarea id="inputArea" placeholder="Start typing here..." disabled></textarea>
+    </div>
+
+    <div class="results" id="results"></div>
   </div>
 
-  <script>
-    // 🔁 Mode Switcher
-    function switchMode(mode) {
-      document.getElementById('practiceMode').classList.add('hidden');
-      document.getElementById('examMode').classList.add('hidden');
-      document.getElementById('practiceBtn').classList.remove('active');
-      document.getElementById('examBtn').classList.remove('active');
-
-      if (mode === 'practice') {
-        document.getElementById('practiceMode').classList.remove('hidden');
-        document.getElementById('practiceBtn').classList.add('active');
-      } else {
-        document.getElementById('examMode').classList.remove('hidden');
-        document.getElementById('examBtn').classList.add('active');
-      }
-    }
-
-    // 📜 Practice Mode Variables
-    const practiceParas = [
-      "Typing is a skill that improves with practice.",
-      "SurajTypingTest helps you become faster and more accurate.",
-      "Keep practicing every day to become a typing master."
-    ];
-    let pWords = [], pIndex = 0, pTyped = 0, pErrors = 0, pTime = 60, pInterval;
-    const pText = document.getElementById("practiceText");
-    const pInput = document.getElementById("practiceInput");
-
-    function startPractice() {
-      const name = document.getElementById("practiceName").value.trim();
-      if (!name) return alert("Enter your name first.");
-      const para = practiceParas[Math.floor(Math.random() * practiceParas.length)];
-      pWords = para.split(" ");
-      pIndex = 0; pTyped = 0; pErrors = 0; pTime = 60;
-      pInput.value = ""; pInput.disabled = false; pInput.focus();
-      showPracticePara();
-      clearInterval(pInterval);
-      pInterval = setInterval(() => {
-        pTime--;
-        document.getElementById("practiceTime").textContent = pTime;
-        updatePracticeStats();
-        if (pTime <= 0) {
-          clearInterval(pInterval);
-          pInput.disabled = true;
-          alert(`Test Over!\nSpeed: ${document.getElementById("practiceWPM").textContent} WPM\nAccuracy: ${document.getElementById("practiceAccuracy").textContent}%`);
-        }
-      }, 1000);
-    }
-
-    function showPracticePara() {
-      pText.innerHTML = "";
-      pWords.forEach((w, i) => {
-        const span = document.createElement("span");
-        span.textContent = w + " ";
-        span.className = "word";
-        if (i === pIndex) span.classList.add("current");
-        pText.appendChild(span);
-      });
-    }
-
-    pInput.addEventListener("input", () => {
-      const input = pInput.value.trimEnd();
-      const current = pWords[pIndex];
-      const spans = pText.querySelectorAll(".word");
-
-      if (input.endsWith(" ")) {
-        if (input.trim().toLowerCase() === current.toLowerCase()) {
-          spans[pIndex].classList.remove("current");
-        } else {
-          spans[pIndex].classList.remove("current");
-          spans[pIndex].classList.add("incorrect");
-          pErrors++;
-        }
-        pTyped += input.trim().length;
-        pIndex++;
-        pInput.value = "";
-        if (pIndex < pWords.length) spans[pIndex].classList.add("current");
-        else { // load next para
-          const para = practiceParas[Math.floor(Math.random() * practiceParas.length)];
-          pWords = para.split(" ");
-          pIndex = 0;
-          showPracticePara();
-        }
-      }
-      updatePracticeStats();
-    });
-
-    function updatePracticeStats() {
-      const minutes = (60 - pTime) / 60;
-      const wpm = minutes > 0 ? Math.round((pTyped / 5) / minutes) : 0;
-      const accuracy = pTyped + pErrors > 0 ? Math.round((pTyped / (pTyped + pErrors)) * 100) : 100;
-      document.getElementById("practiceWPM").textContent = wpm;
-      document.getElementById("practiceAccuracy").textContent = accuracy;
-    }
-
-    // 📜 Exam Mode
-    let eWords = [], eIndex = 0, eTyped = 0, eErrors = 0, eTime = 0, eInterval;
-    const eText = document.getElementById("examText");
-    const eInput = document.getElementById("examInput");
-
-    function startExam() {
-      const name = document.getElementById("examName").value.trim();
-      const para = document.getElementById("examPara").value.trim();
-      eTime = parseInt(document.getElementById("examTime").value);
-      if (!name || !para) return alert("Please enter name and paragraph.");
-      eWords = para.split(" ");
-      eIndex = 0; eTyped = 0; eErrors = 0;
-      eInput.value = ""; eInput.disabled = false; eInput.focus();
-      showExamPara();
-      clearInterval(eInterval);
-      document.getElementById("examTimer").textContent = eTime;
-      eInterval = setInterval(() => {
-        eTime--;
-        document.getElementById("examTimer").textContent = eTime;
-        updateExamStats();
-        if (eTime <= 0) {
-          clearInterval(eInterval);
-          eInput.disabled = true;
-          alert(`Exam Over!\nSpeed: ${document.getElementById("examWPM").textContent} WPM\nAccuracy: ${document.getElementById("examAccuracy").textContent}%\nErrors: ${eErrors}`);
-        }
-      }, 1000);
-    }
-
-    function showExamPara() {
-      eText.innerHTML = "";
-      eWords.forEach((w, i) => {
-        const span = document.createElement("span");
-        span.textContent = w + " ";
-        span.className = "word";
-        if (i === eIndex) span.classList.add("current");
-        eText.appendChild(span);
-      });
-    }
-
-    eInput.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace") e.preventDefault();
-    });
-
-    eInput.addEventListener("input", () => {
-      const input = eInput.value.trimEnd();
-      const current = eWords[eIndex];
-      const spans = eText.querySelectorAll(".word");
-
-      if (input.endsWith(" ")) {
-        if (input.trim().toLowerCase() === current.toLowerCase()) {
-          spans[eIndex].classList.remove("current");
-        } else {
-          spans[eIndex].classList.remove("current");
-          spans[eIndex].classList.add("incorrect");
-          eErrors++;
-        }
-        eTyped += input.trim().length;
-        eIndex++;
-        eInput.value = "";
-        if (eIndex < eWords.length) spans[eIndex].classList.add("current");
-      }
-      updateExamStats();
-    });
-
-    function updateExamStats() {
-      const min = parseInt(document.getElementById("examTime").value) - eTime;
-      const wpm = min > 0 ? Math.round((eTyped / 5) / (min / 60)) : 0;
-      const acc = eTyped + eErrors > 0 ? Math.round((eTyped / (eTyped + eErrors)) * 100) : 100;
-      document.getElementById("examWPM").textContent = wpm;
-      document.getElementById("examAccuracy").textContent = acc;
-      document.getElementById("examErrors").textContent = eErrors;
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
