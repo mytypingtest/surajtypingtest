@@ -112,3 +112,20 @@ function updateHighlight() {
     document.getElementById(`word-${currentWordIndex}`).classList.add("current");
   }
 }
+let timerInterval;
+function startTimer(duration) {
+  clearInterval(timerInterval);
+  let time = duration;
+  const timerElement = document.getElementById("timer");
+
+  timerInterval = setInterval(() => {
+    const minutes = String(Math.floor(time / 60)).padStart(2, '0');
+    const seconds = String(time % 60).padStart(2, '0');
+    timerElement.textContent = `${minutes}:${seconds}`;
+
+    if (--time < 0) {
+      clearInterval(timerInterval);
+      endTypingTest(); // Function jo test khatam kare
+    }
+  }, 1000);
+}
