@@ -1302,3 +1302,332 @@
 
 </body>
 </html>
+            <!-- Typing Test Display Area -->
+<div id="suraj_exam_para" class="text-justify p-3 bg-light english-font"
+     style="height: 200px; overflow-y: scroll; scroll-behavior: smooth; font-size: 20px;">
+  <div class="d-flex justify-content-center align-items-center">
+    <span class="spinner-border text-primary"></span>
+  </div>
+</div>
+
+<!-- Typing Input Area -->
+<div class="p-2">
+  <textarea id="suraj_exam_input" class="form-control english-font mb-2"
+            style="font-size: 20px;" placeholder="Start typing here..." rows="5"
+            autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+
+  <!-- Font Controls -->
+  <a href="javascript:void(0);" title="Increase Font" onclick="change_font(1)" style="color:#364a7d;">
+    <i class="fa fa-plus-square h5" aria-hidden="true"></i>
+  </a>
+  <a href="javascript:void(0);" title="Decrease Font" onclick="change_font(0)" style="color:#364a7d;">
+    <i class="fa fa-minus-square h5 ml-1" aria-hidden="true"></i>
+  </a>
+
+  <!-- Submit Button -->
+  <div class="text-right mt-2">
+    <button class="btn btn-success" id="suraj_submit_btn"
+            style="background: #F1FFF2; color:#399251; border:1px solid #138F1B; font-weight:bold;">
+      Submit
+    </button>
+  </div>
+</div>
+
+<!-- Result Panel -->
+<div class="shadow-sm mt-3 hide" style="max-width:770px; margin:auto;" id="suraj_result_panel">
+  <div class="text-center p-2 clr-blue h5 bg-blue-grad text-white text-shadow font-weight-bold"
+       style="font-family:Oswald;">
+    Your Detailed Typing Test Result
+  </div>
+
+  <table class="table table-bordered" style="font-family:Oswald;">
+    <tbody>
+      <!-- Method 1 -->
+      <tr><td colspan="2" class="text-center bg-light h5">Method 1:</td></tr>
+      <tr>
+        <td colspan="2" class="text-center">
+          <img src="net_speed_formula-2.png" alt="Net Speed Formula" style="max-width:550px; width:100%; height:auto; margin-top:10px;">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center p-2">
+          <span class="text-secondary text-shadow h2"><span id="ns_m1">ND</span> / <span id="nk_m1">48.00</span></span><br>
+          <span class="text-primary">Net Speed</span>
+        </td>
+      </tr>
+      <tr><td>Gross Speed</td><td><span id="gs_m1">ND</span> / <span id="gk_m1">1200</span></td></tr>
+      <tr><td>Accuracy</td><td><span id="acc_m1">48.00</span></td></tr>
+      <tr><td>Total Entries</td><td><span id="tw_m1">4</span></td></tr>
+      <tr><td>Total Errors</td><td><span id="te_m1">48</span></td></tr>
+      <tr><td>Error Rate</td><td><span id="er_m1">48</span></td></tr>
+      <tr><td>Backspace Pressed</td><td><span id="bs_m1">48.00</span></td></tr>
+      <tr><td>Test Duration</td><td><span id="dur_m1">48.00</span></td></tr>
+
+      <!-- Method 2 -->
+      <tr><td colspan="2" class="text-center bg-light h5" style="border-top:2px solid #FFC2A9">Method 2:</td></tr>
+      <tr>
+        <td colspan="2" class="text-center">
+          <img src="net_speed_formula-1.png" alt="Gross Speed Formula" style="max-width:550px; width:100%; height:auto;">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center p-2">
+          <span class="text-secondary text-shadow h2"><span id="ns_m2">ND</span> / <span id="nk_m2">14400</span></span><br>
+          <span class="text-primary">Net Speed</span>
+        </td>
+      </tr>
+      <tr><td>Gross Speed</td><td><span id="gs_m2">ND</span> / <span id="gk_m2">1200</span></td></tr>
+      <tr><td>Accuracy</td><td><span id="acc_m2">56.46</span></td></tr>
+      <tr><td>Full Mistakes</td><td><span id="fm_m2">5</span></td></tr>
+      <tr><td>Half Mistakes</td><td><span id="hm_m2">2</span></td></tr>
+      <tr><td>Total Mistakes</td><td><span id="tm_m2">2</span></td></tr>
+      <tr><td>Penalty</td><td><span id="pl_m2">2</span></td></tr>
+      <tr><td>Error Percentage</td><td><span id="ep_m2">2</span></td></tr>
+
+      <!-- Method 3 (Ignore 5%) -->
+      <tr>
+        <td colspan="2" class="text-center p-2" style="border-top:2px solid #e43b62;">
+          <span class="text-danger">5% Mistakes are Ignorable</span><br>
+          <span class="text-secondary text-shadow h2"><span id="ns_m3">ND</span> / <span id="nk_m3">14400</span></span><br>
+          <span class="text-primary">Net Speed</span>
+        </td>
+      </tr>
+      <tr><td>Gross Speed</td><td><span id="gs_m3">ND</span> / <span id="gk_m3">1200</span></td></tr>
+      <tr><td>Accuracy</td><td><span id="acc_m3">34.86</span></td></tr>
+      <tr><td>Ignorable Mistakes</td><td><span id="im_m3">34.86</span></td></tr>
+      <tr><td>Net Mistakes</td><td><span id="nm_m3">34.86</span></td></tr>
+      <tr><td>Penalty</td><td><span id="pl_m3">34.86</span></td></tr>
+      <tr><td>Error Percentage</td><td><span id="ep_m3">34.86</span></td></tr>
+
+      <!-- Typed Paragraph Diff View -->
+      <tr>
+        <td colspan="2">
+          Your Typed Paragraph: Full Mistakes <span style="color:red">RED</span>, Half Mistakes <span style="color:#0020c1">BLUE</span>
+          <div id="suraj_diff_output" class="english-font pt-2 text-justify" style="color:#666"></div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-right">
+          <button class="btn btn-danger reload" onclick="location.reload()">Retake</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+            <!-- SurajTypingTest Result Panel -->
+<div class="text-center h-f hide" id="suraj_result_panel">
+  <div class="border rounded shadow-sm d-inline-block">
+    <div class="text-center m-0 text-white h5 p-1 border-radius-top-lg bg-danger text-shadow">
+      SurajTypingTest Result
+    </div>
+    <div class="bg-light">
+      <div class="text-center h1 p-2 text-secondary text-shadow">
+        <span id="suraj_ns">ND</span> WPM
+      </div>
+      <span class="small text-danger">Net Speed</span>
+    </div>
+
+    <ul class="list-group" style="min-width:450px;">
+      <li class="list-group-item d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">User Name:</span>
+        <span class="pr-4 h6" id="suraj_name">User</span>
+      </li>
+      <li class="list-group-item bg-light d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Correct Entries:</span>
+        <span class="pr-4 text-success h6" id="suraj_correct">0</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Incorrect Entries:</span>
+        <span class="pr-4 text-danger h6" id="suraj_incorrect">0</span>
+      </li>
+      <li class="list-group-item bg-light d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Total Entries:</span>
+        <span class="pr-4 h6" id="suraj_total">0</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Error Rate:</span>
+        <span class="pr-4 text-danger h6" id="suraj_error_rate">0%</span>
+      </li>
+      <li class="list-group-item bg-light d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Accuracy:</span>
+        <span class="pr-4 text-primary h6" id="suraj_accuracy">0%</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Gross Speed:</span>
+        <span class="pr-4 text-info h6" id="suraj_gross">ND</span>
+      </li>
+      <li class="list-group-item bg-light d-flex justify-content-between align-items-center pl-4">
+        <span class="text-secondary">Total Time:</span>
+        <span class="pr-4 h6" id="suraj_time">ND</span>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center pl-4">
+        <button class="btn btn-primary" onclick="shareOnFacebook()">
+          <i class="fa fa-facebook-square"></i> Share
+        </button>
+        <button class="btn btn-danger" onclick="location.reload();">Retake</button>
+      </li>
+    </ul>
+  </div>
+</div>
+            <footer class="footer" style="background:#161829; color:#B8B6B6;">
+  <div class="text-center">
+    <!-- Ad Placeholder -->
+    <iframe data-aa='1430247' src='//ad.a-ads.com/1430247?size=728x90'
+      style='width:728px; height:90px; border:0; padding:0; overflow:hidden; background-color:transparent;'></iframe>
+  </div>
+
+  <div class="container-fluid p-5">
+    <div class="row" style="max-width:1750px; margin:auto;">
+
+      <!-- Left Column -->
+      <div class="col-lg-6">
+        <div class="row">
+          <!-- Logo and About -->
+          <div class="col-md-6 mt-3">
+            <img src="../menu_footer/surajlogo.png" class="m-1 mb-3 flogo" alt="SurajTypingTest Logo">
+            <p class="cnt">
+              SurajTypingTest is built with the vision to provide a smooth, fast and reliable typing experience. Our dedicated team constantly strives to bring new features and innovations to make your typing journey easier and more effective.
+            </p>
+          </div>
+
+          <!-- Search and Quick Links -->
+          <div class="col-md-6 mt-3">
+            <h5 class="text-light mb-3 f-h">Search</h5>
+            <div>
+              <input type="text" class="form-control" placeholder="Search">
+              <span class="sicon"><a href="#"><i class="fa fa-search"></i></a></span>
+            </div>
+
+            <h5 class="text-light mt-5 f-h">Quick Links</h5>
+            <div class="row">
+              <div class="col">
+                <a href="/" class="cnt flink">Home</a><br>
+                <a href="/about" class="cnt flink">About Us</a><br>
+                <a href="/faq" class="cnt flink">FAQ</a><br>
+                <a href="/blog" class="cnt flink">Blog</a><br>
+              </div>
+              <div class="col">
+                <a href="/timeline" class="cnt flink">Timeline</a><br>
+                <a href="/contact" class="cnt flink">Contact</a><br>
+                <a href="/sitemap.xml" class="cnt flink">Sitemap</a><br>
+                <a href="/privacy-policy" class="cnt flink">Privacy Policy</a><br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-lg-6">
+        <div class="row">
+          <!-- Contact Info -->
+          <div class="col-md-6 mt-3" id="contact">
+            <h5 class="text-light mb-3 f-h">Contact Us</h5>
+            <p class="cnt">
+              <i class="fa fa-map-marker"></i> Malviya Nagar, Alwar, Rajasthan<br>
+              <i class="fa fa-phone"></i> Phone: +91 9876543210<br>
+              <i class="fa fa-envelope"></i> Email: support@surajtypingtest.com
+            </p>
+
+            <h5 class="text-light mt-4 f-h">Follow Us</h5>
+            <div class="mt-4">
+              <a href="#"><span class="h-icon ficon bicon"><i class="fa fa-facebook"></i></span></a>
+              <a href="#"><span class="h-icon twicon bicon"><i class="fa fa-twitter"></i></span></a>
+              <a href="#"><span class="h-icon licon bicon"><i class="fa fa-linkedin"></i></span></a>
+              <a href="#"><span class="h-icon yicon bicon"><i class="fa fa-youtube"></i></span></a>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div class="col-md-6 mt-3">
+            <h5 class="text-light f-h">Send Us a Message</h5>
+            <p class="mb-3" style="color:#F8962C;">Preferred language: Hindi / English</p>
+            <form action="#_msg" method="post">
+              <input type="text" class="form-control mb-2" placeholder="Name" name="user_name" required>
+              <input type="email" class="form-control mb-2" placeholder="Email" name="user_email" required>
+              <textarea rows="4" class="form-control mb-2" placeholder="Message" name="user_message" required></textarea>
+              <div class="g-recaptcha mb-2" data-sitekey="your-site-key-here" data-theme='dark'></div>
+              <div>
+                <input type="submit" class="btn btn-warning p-2" name="send" value="SEND">
+                <span id="_msg" class="ml-2 cnt"></span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- end row -->
+  </div>
+</footer><script>
+function setCustomParagraphOptions() {
+  const paraDropdown = document.getElementById('_c_para');
+  const customTextBox = document.getElementById('_c_text');
+  const selectControl = document.getElementById('_select_cs');
+  const defaultRadio = document.getElementById('_df');
+  const customRadio = document.getElementById('_cs');
+
+  // Load custom paragraph data from localStorage
+  let storedData = localStorage.getItem('eng_custom_para');
+  let paragraphs = [];
+
+  if (storedData) {
+    paragraphs = JSON.parse(storedData);
+  } else {
+    // If not found, initialize blank paragraph list
+    paragraphs = [{ p_h: '', p_c: '' }];
+    localStorage.setItem('eng_custom_para', JSON.stringify(paragraphs));
+  }
+
+  // Build dropdown if at least one custom paragraph is saved
+  if (paragraphs.length <= 1) {
+    paraDropdown.innerHTML = "<div><span class='text-danger'>No custom paragraph found! Please upload the text.</span></div>";
+    selectControl.setAttribute('disabled', true);
+    return;
+  }
+
+  let optionsHtml = `<select id="_select_cs" class="custom-select mb-1">`;
+  for (let i = paragraphs.length - 1; i > 0; i--) {
+    optionsHtml += `<option value="${i}">${paragraphs[i].p_h || 'Untitled Paragraph'}</option>`;
+  }
+  optionsHtml += `</select>`;
+
+  paraDropdown.innerHTML = optionsHtml;
+  selectControl.removeAttribute('disabled');
+
+  // Load selected paragraph content
+  const selectElement = document.getElementById('_select_cs');
+  customTextBox.value = paragraphs[selectElement.value].p_c;
+
+  // Change content on dropdown change
+  selectElement.onchange = function () {
+    customTextBox.value = paragraphs[this.value].p_c;
+  };
+
+  // Handle radio button logic
+  defaultRadio.checked = true;
+  customRadio.checked = false;
+
+  defaultRadio.onclick = function () {
+    this.checked = true;
+    customRadio.checked = false;
+    selectControl.setAttribute('disabled', true);
+    paraDropdown.innerHTML = "";
+  };
+
+  customRadio.onclick = function () {
+    this.checked = true;
+    defaultRadio.checked = false;
+    selectControl.removeAttribute('disabled');
+    paraDropdown.innerHTML = optionsHtml;
+    customTextBox.value = paragraphs[selectElement.value].p_c;
+  };
+}
+</script>
+
+<!-- Call function on page load -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  setCustomParagraphOptions();
+});
+</script>
+            
