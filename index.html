@@ -1,1 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SurajTypingTest - Online Typing Test in English</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #0b3d91;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    nav {
+      background-color: #163e73;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 10px;
+      gap: 10px;
+      justify-content: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 15px;
+      background-color: #2459a2;
+      border-radius: 5px;
+    }
+    nav a:hover {
+      background-color: #0a3c76;
+    }
 
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .settings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .settings label {
+      display: flex;
+      flex-direction: column;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 18px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    #typing-box {
+      width: 100%;
+      height: 150px;
+      font-size: 18px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      outline: none;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #eef3ff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .highlight {
+      background-color: yellow;
+    }
+
+    .wrong {
+      color: red;
+    }
+
+    .footer {
+      background-color: #0b3d91;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .settings {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>SurajTypingTest.com - Typing Test in English</header>
+
+  <nav>
+    <a href="#">Typing</a>
+    <a href="#">Tutor</a>
+    <a href="#">Typing Test</a>
+    <a href="#">Converter</a>
+    <a href="#">Translator</a>
+    <a href="#">Blog</a>
+    <a href="#">Game</a>
+  </nav>
+
+  <div class="container">
+    <div class="settings">
+      <label>
+        User Name:
+        <input type="text" id="username" placeholder="Enter your name" />
+      </label>
+      <label>
+        Time (minutes):
+        <select id="time-limit">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="5" selected>5</option>
+          <option value="10">10</option>
+        </select>
+      </label>
+      <label>
+        Mode:
+        <select id="mode">
+          <option value="practice">Practice</option>
+          <option value="exam">Exam</option>
+        </select>
+      </label>
+      <label>
+        Backspace:
+        <select id="backspace">
+          <option value="enable">Enable</option>
+          <option value="disable">Disable</option>
+        </select>
+      </label>
+    </div>
+
+    <label for="paragraph">Typing Paragraph:</label>
+    <textarea id="paragraph" readonly>
+The quick brown fox jumps over the lazy dog. Practice typing this sentence quickly and accurately. Improve your typing speed daily.
+    </textarea>
+
+    <button onclick="startTyping()">Start Typing</button>
+
+    <div id="typing-box" contenteditable="true" oninput="handleTyping()"></div>
+
+    <div id="result"></div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 SurajTypingTest.com | Contact: support@surajtypingtest.com
+  </div>
+
+  <script>
+    let originalText = document.getElementById('paragraph').value.trim();
+    let startTime = null;
+    let timer = null;
+    let timeLimit = 0;
+    let typedChars = 0;
+
+    function startTyping() {
+      const box = document.getElementById("typing-box");
+      const time = parseInt(document.getElementById("time-limit").value);
+      timeLimit = time * 60;
+      typedChars = 0;
+      box.innerText = "";
+      box.focus();
+      startTime = new Date().getTime();
+
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => {
+        const now = new Date().getTime();
+        const elapsed = Math.floor((now - startTime) / 1000);
+        const remaining = timeLimit - elapsed;
+        if (remaining <= 0) {
+          clearInterval(timer);
+          calculateResult();
+        }
+      }, 1000);
+    }
+
+    function handleTyping() {
+      const box = document.getElementById("typing-box");
+      const userText = box.innerText.trim();
+      typedChars = userText.length;
+
+      const originalWords = originalText.split(" ");
+      const userWords = userText.split(" ");
+      let correct = 0;
+
+      for (let i = 0; i < userWords.length; i++) {
+        if (userWords[i] === originalWords[i]) correct++;
+      }
+
+      const accuracy = ((correct / originalWords.length) * 100).toFixed(2);
+      const elapsed = Math.floor((new Date().getTime() - startTime) / 1000) / 60;
+      const wpm = Math.round(userWords.length / elapsed);
+
+      document.getElementById("result").innerHTML = `
+        <strong>WPM:</strong> ${wpm}<br>
+        <strong>Accuracy:</strong> ${accuracy}%<br>
+        <strong>Characters Typed:</strong> ${typedChars}<br>
+      `;
+    }
+
+    function calculateResult() {
+      handleTyping();
+      alert("Time's up! See your result below.");
+    }
+  </script>
+</body>
+</html>
