@@ -1,1 +1,425 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SurajTypingTest - Practice & Exam Mode</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    main {
+      max-width: 1100px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .flex { display: flex; flex-wrap: wrap; gap: 10px; }
+    .setting { margin-bottom: 20px; }
+    .setting label { margin-right: 10px; font-weight: bold; }
+    select, input[type="file"] {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background-color: #0056b3; }
+    .typing-box {
+      width: 100%;
+      height: 250px;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+    .highlight { background: yellow; }
+    .mistake { background: #f99; }
+    .controls { margin: 15px 0; }
+    .results {
+      background: #e9f7ef;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+    }
+    .font-controls button {
+      margin-right: 5px;
+    }
+    footer {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      margin-top: 50px;
+    }
+    @media (max-width: 600px) {
+      .flex { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>SurajTypingTest - Practice & Exam Mode</header>
+  <main>
+    <h2 style="text-align:center;">Welcome to Suraj Typing Test</h2>
+    <!-- SETTINGS PANEL -->
+    <div class="setting">
+      <div class="flex">
+        <label for="mode">Mode:</label>
+        <select id="mode">
+          <option value="practice">Practice Mode</option>
+          <option value="exam">Exam Mode</option>
+        </select>
+
+        <label for="paraSelect">Paragraph:</label>
+        <select id="paraSelect">
+          <option value="1">Paragraph 1</option>
+          <option value="2">Paragraph 2</option>
+          <option value="3">Paragraph 3</option>
+          <!-- Add up to 75 -->
+          <option value="75">Paragraph 75</option>
+        </select>
+
+        <label for="timeSelect">Time (minutes):</label>
+        <select id="timeSelect">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+
+        <label for="wordLimit">Word Limit:</label>
+        <select id="wordLimit">
+          <option value="0">None</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="200">200</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setting flex">
+      <label><input type="checkbox" id="enableBackspace" checked /> Allow Backspace</label>
+      <label><input type="checkbox" id="highlightWord" checked /> Highlight Current Word</label>
+      <label><input type="checkbox" id="autoScroll" checked /> Auto Scroll</label>
+      <label>Upload Paragraph: <input type="file" id="uploadPara" accept=".txt" /></label>
+    </div>
+
+    <div class="setting flex">
+      <button id="startPractice">Start Practice</button>
+      <button id="startExam">Start Exam</button>
+    </div>
+    <!-- TYPING PARAGRAPH BOX -->
+    <div class="typing-box" id="paragraphBox">
+      <!-- Paragraph words with <span> will be injected here via JavaScript -->
+      <p style="color: #aaa;">Click Start to load paragraph...</p>
+    </div>
+
+    <!-- USER INPUT BOX -->
+    <div class="setting">
+      <textarea id="userInput" rows="5" style="width:100%; font-size:18px; padding:10px;" placeholder="Start typing here..." disabled></textarea>
+    </div>
+
+    <!-- TIMER + FONT CONTROLS -->
+    <div class="flex controls">
+      <div style="flex: 1;">
+        <strong>Time Left:</strong> <span id="timeLeft">00:00</span>
+      </div>
+      <div class="font-controls">
+        <strong>Font:</strong>
+        <button onclick="adjustFontSize(2)">A+</button>
+        <button onclick="adjustFontSize(-2)">A-</button>
+        <button onclick="toggleBold()">Bold</button>
+        <button onclick="toggleItalic()">Italic</button>
+      </div>
+    </div>
+    <!-- RESULT PANEL -->
+    <div class="results" id="resultPanel">
+      <h3>Typing Test Result:</h3>
+      <p><strong>Gross WPM:</strong> <span id="grossWPM">0</span></p>
+      <p><strong>Net WPM:</strong> <span id="netWPM">0</span></p>
+      <p><strong>Accuracy:</strong> <span id="accuracy">0</span>%</p>
+      <p><strong>Total Mistakes:</strong> <span id="mistakes">0</span></p>
+      <p><strong>Time Taken:</strong> <span id="timeTaken">0</span> seconds</p>
+    </div>
+
+    <!-- RETAKE BUTTON -->
+    <div class="setting" style="text-align:center;">
+      <button onclick="retakeTest()">Retake Test</button>
+    </div>
+    <!-- GOOGLE ADS PLACEHOLDER -->
+    <div style="margin: 20px 0; text-align: center;">
+      <!-- Replace this with your real AdSense code -->
+      <div style="width: 100%; background: #eaeaea; padding: 20px; border-radius: 10px;">
+        <strong>[ Google Ad Placeholder ]</strong>
+      </div>
+    </div>
+
+    <!-- CONTACT US -->
+    <div class="setting" style="text-align:center;">
+      <button onclick="alert('Contact: surajtypingtest@gmail.com')">Contact Us</button>
+    </div>
+
+    <!-- INSTALL APP PROMPT -->
+    <div id="appPrompt" style="display:none; padding: 15px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; margin-top: 20px;">
+      <strong>Install App:</strong> You can install SurajTypingTest on your phone. <button onclick="installApp()">Install</button>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      &copy; 2025 SurajTypingTest.com | All Rights Reserved
+    </footer>
+  </main>
+  <script>
+  let originalWords = [];
+  let currentWordIndex = 0;
+  let timerInterval;
+  let timeLeft = 0;
+  let testStarted = false;
+  let mistakeCount = 0;
+  let startTime = 0;
+  let userTyped = "";
+
+  const paragraphBox = document.getElementById("paragraphBox");
+  const userInput = document.getElementById("userInput");
+  const resultPanel = document.getElementById("resultPanel");
+  const timeDisplay = document.getElementById("timeLeft");
+
+  // PARAGRAPHS (example - you can expand to 75+)
+  const paragraphs = {
+    1: "Typing is a skill that improves with practice and consistency.",
+    2: "The quick brown fox jumps over the lazy dog.",
+    3: "Practice typing every day to increase speed and accuracy.",
+    75: "This is paragraph seventy five used in Suraj Typing Test."
+  };
+
+  // LOAD PARAGRAPH FUNCTION
+  function loadParagraph(paraIdOrText) {
+    paragraphBox.innerHTML = "";
+    currentWordIndex = 0;
+    mistakeCount = 0;
+    const text = paraIdOrText || paragraphs[document.getElementById("paraSelect").value];
+    originalWords = text.trim().split(" ");
+    originalWords.forEach((word, idx) => {
+      const span = document.createElement("span");
+      span.textContent = word + " ";
+      if (idx === 0) span.classList.add("highlight");
+      paragraphBox.appendChild(span);
+    });
+  }
+
+  // HANDLE FILE UPLOAD
+  document.getElementById("uploadPara").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const content = e.target.result;
+      localStorage.setItem("customPara", content);
+      loadParagraph(content);
+    };
+    reader.readAsText(file);
+  });
+    function startTest(isExam = false) {
+    loadParagraph(localStorage.getItem("customPara") || null);
+    testStarted = true;
+    userInput.disabled = false;
+    userInput.value = "";
+    userTyped = "";
+    userInput.focus();
+    resultPanel.style.display = "none";
+    timeLeft = parseInt(document.getElementById("timeSelect").value) * 60;
+    startTime = Date.now();
+    updateTimerDisplay();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  document.getElementById("startPractice").addEventListener("click", () => startTest(false));
+  document.getElementById("startExam").addEventListener("click", () => startTest(true));
+
+  // TYPING INPUT LOGIC
+  userInput.addEventListener("input", () => {
+    if (!testStarted) return;
+
+    const inputWords = userInput.value.trim().split(/\s+/);
+    const spans = paragraphBox.querySelectorAll("span");
+
+    if (!document.getElementById("enableBackspace").checked && userInput.value.length < userTyped.length) {
+      userInput.value = userTyped; // block backspace
+      return;
+    }
+
+    userTyped = userInput.value; // store latest state
+
+    spans.forEach(span => {
+      span.classList.remove("highlight", "mistake");
+    });
+
+    currentWordIndex = inputWords.length - 1;
+
+    spans.forEach((span, idx) => {
+      if (inputWords[idx] != null) {
+        if (inputWords[idx] === originalWords[idx]) {
+          span.classList.remove("mistake");
+        } else {
+          span.classList.add("mistake");
+        }
+      }
+      if (idx === currentWordIndex) {
+        span.classList.add("highlight");
+
+        // Auto Scroll
+        if (document.getElementById("autoScroll").checked) {
+          span.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    });
+
+    // Word Limit Stop
+    const wordLimit = parseInt(document.getElementById("wordLimit").value);
+    if (wordLimit > 0 && inputWords.length >= wordLimit) {
+      endTest();
+    }
+  });
+
+  function updateTimer() {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endTest();
+      return;
+    }
+    timeLeft--;
+    updateTimerDisplay();
+  }
+
+  function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timeDisplay.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+    function endTest() {
+    testStarted = false;
+    userInput.disabled = true;
+    clearInterval(timerInterval);
+
+    const inputWords = userInput.value.trim().split(/\s+/);
+    const totalWords = inputWords.length;
+    const correctWords = inputWords.filter((word, i) => word === originalWords[i]).length;
+    mistakeCount = totalWords - correctWords;
+
+    const timeTaken = Math.round((Date.now() - startTime) / 1000);
+    const minutes = timeTaken / 60;
+
+    const grossWPM = Math.round(totalWords / minutes);
+    const netWPM = Math.max(0, Math.round((correctWords - mistakeCount) / minutes));
+    const accuracy = Math.round((correctWords / totalWords) * 100);
+
+    document.getElementById("grossWPM").textContent = grossWPM || 0;
+    document.getElementById("netWPM").textContent = netWPM || 0;
+    document.getElementById("accuracy").textContent = accuracy || 0;
+    document.getElementById("mistakes").textContent = mistakeCount || 0;
+    document.getElementById("timeTaken").textContent = timeTaken;
+
+    resultPanel.style.display = "block";
+  }
+
+  function retakeTest() {
+    clearInterval(timerInterval);
+    userInput.disabled = true;
+    userInput.value = "";
+    paragraphBox.innerHTML = '<p style="color: #aaa;">Click Start to load paragraph...</p>';
+    resultPanel.style.display = "none";
+    document.getElementById("timeLeft").textContent = "00:00";
+    testStarted = false;
+    userTyped = "";
+  }
+
+  // FONT CONTROLS
+  function adjustFontSize(change) {
+    const currentSize = parseInt(window.getComputedStyle(userInput).fontSize);
+    const newSize = currentSize + change;
+    userInput.style.fontSize = `${newSize}px`;
+  }
+
+  function toggleBold() {
+    userInput.style.fontWeight = userInput.style.fontWeight === "bold" ? "normal" : "bold";
+  }
+
+  function toggleItalic() {
+    userInput.style.fontStyle = userInput.style.fontStyle === "italic" ? "normal" : "italic";
+  }
+</script>
+</body>
+</html>
+<script>
+  // INSTALL APP PROMPT (for mobile PWA install)
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const promptBox = document.getElementById("appPrompt");
+    if (promptBox) promptBox.style.display = "block";
+  });
+
+  function installApp() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('App installed');
+        }
+        deferredPrompt = null;
+      });
+    }
+  }
+
+  // LOCAL STORAGE: Restore custom paragraph if exists
+  window.addEventListener("load", () => {
+    const savedPara = localStorage.getItem("customPara");
+    if (savedPara) {
+      loadParagraph(savedPara);
+    }
+  });
+</script>
+<!-- GOOGLE ANALYTICS PLACEHOLDER -->
+<script>
+  // Replace with real analytics code
+  console.log("Analytics script goes here");
+</script>
+
+<!-- reCAPTCHA, if needed -->
+<!-- <script src="https://www.google.com/recaptcha/api.js"></script> -->
+
+</div> <!-- end .container -->
+<footer>
+  &copy; 2025 SurajTypingTest.com • Made with ❤️ for Typing Lovers.
+</footer>
+</body>
+</html>
